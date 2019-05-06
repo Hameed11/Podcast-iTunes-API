@@ -11,9 +11,9 @@ import Alamofire
 
 class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
-    let podcasts = [
-        Podcast(name: "Lets build an adudio app", artistName: "Mido hcj"),
-        Podcast(name: "Lets build an app", artistName: " hcj")
+    var podcasts = [
+        Podcast(trackName: "Lets build an adudio app", artistName: "Mido hcj"),
+        Podcast(trackName: "Lets build an app", artistName: " hcj")
     ]
     
     let cellId = "cellId"
@@ -44,8 +44,16 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
         print(searchText)
         
         //implement Alamofire to search iTunes API
-        let url = "https://itunes.apple.com/search?term=\(searchText)"
-        Alamofire.request(url).responseData { (dataResponse) in
+       // let url = "https://itunes.apple.com/search?term=\(searchText)"
+        
+        
+        //filter search we only interested in podcast - "media": "podcast"
+        let url = "https://itunes.apple.com/search"
+        let parameters = ["term": searchText, "media": "podcast"]
+
+        //URLEncoding.default will turn space between words in search to %20
+        Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
+            
             if let err = dataResponse.error {
                 print("failed to connect yahoo", err)
                 return
@@ -56,13 +64,38 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
             }
             print(data)
             
-          guard let s = String(data: data, encoding: .utf8) else {
-                return
-            }
             
-            print(s)
+            do {
+                
+                let searchResult = try JSONDecoder().decode(SearchResults.self, from: data)
+                print("searchResult.resultCount", searchResult.resultCount)
+                
+                self.podcasts = searchResult.results
+                self.tableView.reloadData()
+                
+            } catch let decodeErr {
+                print("Failed to decode", decodeErr)
+            }
         }
+            
+        }
+        
+    
+    
+    //4. implement a UISearchController
+   // Decodable;  to transform json that we get form the api into Podcast model objects
+    //to hold all our search result
+    /*
+     
+     "results": [
+     {"wrapperType":"track", "kind":"song", "artistId":272836694, "collectionId":273992420
+ 
+    */
+    struct SearchResults: Decodable {
+        let resultCount: Int
+        let results: [Podcast]
     }
+    
     
     fileprivate func setupTableView() {
         //1. register a cell fro our tableView
@@ -87,7 +120,7 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
 
         let podcast = podcasts[indexPath.row]
         // Configure the cell...
-        cell.textLabel?.text = "\(podcast.name)\n\(podcast.artistName)"
+        cell.textLabel?.text = "\(podcast.trackName ?? "")\n\(podcast.artistName ?? "")"
         cell.textLabel?.numberOfLines = 0
         cell.imageView?.image =  #imageLiteral(resourceName: "appicon")
 

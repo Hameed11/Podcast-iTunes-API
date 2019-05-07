@@ -57,7 +57,13 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     fileprivate func setupTableView() {
         //1. register a cell fro our tableView
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        //tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        
+        //1. register a cell fro our tableView
+        //7.L
+        //"PodcastCell" swift file name should matches
+        let nib = UINib(nibName: "PodcastCell", bundle: nil)
+        tableView.register(nib, forCellReuseIdentifier: cellId)
     }
     
     // MARK: - Table view data source
@@ -74,17 +80,24 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! PodcastCell
 
         let podcast = podcasts[indexPath.row]
-        // Configure the cell...
-        cell.textLabel?.text = "\(podcast.trackName ?? "")\n\(podcast.artistName ?? "")"
-        cell.textLabel?.numberOfLines = 0
-        cell.imageView?.image =  #imageLiteral(resourceName: "appicon")
+        cell.podcast = podcast
+        
+//        let podcast = podcasts[indexPath.row]
+//        // Configure the cell...
+//        cell.textLabel?.text = "\(podcast.trackName ?? "")\n\(podcast.artistName ?? "")"
+//        cell.textLabel?.numberOfLines = 0
+//        cell.imageView?.image =  #imageLiteral(resourceName: "appicon")
 
         return cell
     }
     
+    //7.L give cells tall height
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 132
+    }
 
     /*
     // Override to support conditional editing of the table view.

@@ -16,6 +16,8 @@
 		730A4265227FE3C200F7DC75 /* SearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730A4264227FE3C200F7DC75 /* SearchTableViewController.swift */; };
 		730A4268227FE51400F7DC75 /* Podcast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730A4267227FE51400F7DC75 /* Podcast.swift */; };
 		730A426B2281452600F7DC75 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730A426A2281452600F7DC75 /* APIService.swift */; };
+		730A426E2281521900F7DC75 /* PodcastCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 730A426D2281521900F7DC75 /* PodcastCell.xib */; };
+		730A427022815A6300F7DC75 /* PodcastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730A426F22815A6300F7DC75 /* PodcastCell.swift */; };
 		87A038A12AD049E639DD7242 /* Pods_PodcastProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6E600577FFA2D0B00E4D29 /* Pods_PodcastProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +33,8 @@
 		730A4264227FE3C200F7DC75 /* SearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewController.swift; sourceTree = "<group>"; };
 		730A4267227FE51400F7DC75 /* Podcast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Podcast.swift; sourceTree = "<group>"; };
 		730A426A2281452600F7DC75 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		730A426D2281521900F7DC75 /* PodcastCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PodcastCell.xib; sourceTree = "<group>"; };
+		730A426F22815A6300F7DC75 /* PodcastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PodcastCell.swift; sourceTree = "<group>"; };
 		9BA221DC8BB50C2E3F8EF0B6 /* Pods-PodcastProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastProject.release.xcconfig"; path = "Target Support Files/Pods-PodcastProject/Pods-PodcastProject.release.xcconfig"; sourceTree = "<group>"; };
 		BD6E600577FFA2D0B00E4D29 /* Pods_PodcastProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PodcastProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1BE675F0CF52C1C4F4AA0F2 /* Pods-PodcastProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastProject.debug.xcconfig"; path = "Target Support Files/Pods-PodcastProject/Pods-PodcastProject.debug.xcconfig"; sourceTree = "<group>"; };
@@ -78,6 +82,7 @@
 		730A424E227EB5C000F7DC75 /* PodcastProject */ = {
 			isa = PBXGroup;
 			children = (
+				730A426C228151E600F7DC75 /* Views */,
 				730A4269228144F300F7DC75 /* APIService */,
 				730A4266227FE50400F7DC75 /* Model */,
 				730A4263227FE37E00F7DC75 /* Controllers */,
@@ -114,6 +119,15 @@
 				730A426A2281452600F7DC75 /* APIService.swift */,
 			);
 			path = APIService;
+			sourceTree = "<group>";
+		};
+		730A426C228151E600F7DC75 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				730A426D2281521900F7DC75 /* PodcastCell.xib */,
+				730A426F22815A6300F7DC75 /* PodcastCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		EF0831DB9DCADBD34E7971CB /* Frameworks */ = {
@@ -186,6 +200,7 @@
 			files = (
 				730A425A227EB5C100F7DC75 /* LaunchScreen.storyboard in Resources */,
 				730A4257227EB5C100F7DC75 /* Assets.xcassets in Resources */,
+				730A426E2281521900F7DC75 /* PodcastCell.xib in Resources */,
 				730A4255227EB5C000F7DC75 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -245,6 +260,7 @@
 				730A4262227EB5F300F7DC75 /* MainTabBarController.swift in Sources */,
 				730A426B2281452600F7DC75 /* APIService.swift in Sources */,
 				730A4268227FE51400F7DC75 /* Podcast.swift in Sources */,
+				730A427022815A6300F7DC75 /* PodcastCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

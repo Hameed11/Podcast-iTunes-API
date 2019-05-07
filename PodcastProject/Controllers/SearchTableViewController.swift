@@ -40,61 +40,19 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     //MARK:- setup Work
     //3. implement a UISearchController
+    //searchText parameter is the text we are searching
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         
-        //implement Alamofire to search iTunes API
-       // let url = "https://itunes.apple.com/search?term=\(searchText)"
-        
-        
-        //filter search we only interested in podcast - "media": "podcast"
-        let url = "https://itunes.apple.com/search"
-        let parameters = ["term": searchText, "media": "podcast"]
-
-        //URLEncoding.default will turn space between words in search to %20
-        Alamofire.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseData { (dataResponse) in
-            
-            if let err = dataResponse.error {
-                print("failed to connect yahoo", err)
-                return
-            }
-            
-            guard let data = dataResponse.data else {
-                return
-            }
-            print(data)
-            
-            
-            do {
-                
-                let searchResult = try JSONDecoder().decode(SearchResults.self, from: data)
-                print("searchResult.resultCount", searchResult.resultCount)
-                
-                self.podcasts = searchResult.results
-                self.tableView.reloadData()
-                
-            } catch let decodeErr {
-                print("Failed to decode", decodeErr)
-            }
-        }
-            
+        //MARK:_ the order of call
+        print(1)
+        APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
+            self.podcasts = podcasts
+            self.tableView.reloadData()
         }
         
-    
-    
-    //4. implement a UISearchController
-   // Decodable;  to transform json that we get form the api into Podcast model objects
-    //to hold all our search result
-    /*
-     
-     "results": [
-     {"wrapperType":"track", "kind":"song", "artistId":272836694, "collectionId":273992420
- 
-    */
-    struct SearchResults: Decodable {
-        let resultCount: Int
-        let results: [Podcast]
     }
+    
     
     
     fileprivate func setupTableView() {

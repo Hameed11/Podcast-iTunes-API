@@ -108,6 +108,7 @@
 		730A4266227FE50400F7DC75 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				730A426A2281452600F7DC75 /* APIService.swift */,
 				730A4267227FE51400F7DC75 /* Podcast.swift */,
 			);
 			path = Model;
@@ -116,7 +117,6 @@
 		730A4269228144F300F7DC75 /* APIService */ = {
 			isa = PBXGroup;
 			children = (
-				730A426A2281452600F7DC75 /* APIService.swift */,
 			);
 			path = APIService;
 			sourceTree = "<group>";

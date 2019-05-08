@@ -11,10 +11,7 @@ import Alamofire
 
 class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
-    var podcasts = [
-        Podcast(trackName: "Lets build an adudio app", artistName: "Mido hcj"),
-        Podcast(trackName: "Lets build an app", artistName: " hcj")
-    ]
+    var podcasts = [Podcast]()
     
     let cellId = "cellId"
     
@@ -56,6 +53,10 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     
     fileprivate func setupTableView() {
+        
+        //to remove lines in tableView
+        tableView.tableFooterView = UIView()
+        
         //1. register a cell fro our tableView
         //tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
@@ -68,11 +69,19 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
 
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label = UILabel()
+        label.text = "Please enter a Search Term"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        return label
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 250
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return podcasts.count

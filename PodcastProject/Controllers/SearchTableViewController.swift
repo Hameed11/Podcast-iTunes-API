@@ -27,6 +27,10 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     }
     
     fileprivate func setupSearchBar() {
+        
+        //to show title properly on EpisodesTableViewController set it to true
+        self.definesPresentationContext = true
+        
         //2. implement a UISearchController
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -69,6 +73,15 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     // MARK: - Table view data source
 
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(indexPath.row)
+        
+        let episodesTableViewController = EpisodesTableViewController()
+        let podcast = podcasts[indexPath.row]
+        episodesTableViewController.podcast = podcast
+        navigationController?.pushViewController(episodesTableViewController, animated: true)
+    }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let label = UILabel()
@@ -79,7 +92,8 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 250
+        //if podcasts array count is greater than zeron return height 0 else return height 250 - ternary operator
+        return self.podcasts.count > 0 ? 0 : 250
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

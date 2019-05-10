@@ -8,5 +8,6 @@ target 'PodcastProject' do
   # Pods for PodcastProject
   pod 'Alamofire', '~> 4.5'
   pod 'SDWebImage', '~> 5.0'
+  pod 'FeedKit', '~> 8.0'
 
 end

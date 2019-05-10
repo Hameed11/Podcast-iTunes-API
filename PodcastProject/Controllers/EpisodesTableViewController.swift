@@ -7,12 +7,54 @@
 //
 
 import UIKit
+import FeedKit
 
 class EpisodesTableViewController: UITableViewController {
     
     var podcast: Podcast? {
         didSet {
             navigationItem.title = podcast?.trackName
+            
+            fetchEpisodes()
+            print(podcast?.feedUrl)
+        }
+    }
+    
+    fileprivate func fetchEpisodes() {
+        print("Looking for espisodes at feed url:", podcast?.feedUrl ?? "")
+        
+        guard let feedUrl = podcast?.feedUrl else { return }
+        
+        let secureFeedUrl = feedUrl.contains("https") ? feedUrl : feedUrl.replacingOccurrences(of: "http", with: "https")
+        
+        guard let url = URL(string: secureFeedUrl) else { return}
+        let parser = FeedParser(URL: url)
+        
+        parser.parseAsync { (result) in
+
+            var episodes = [Episode]() //an empty array of Episode
+            
+            // Associative enumeration values
+            switch result {
+            case let .rss(feed):
+                feed.items?.forEach({ (feedItem) in
+                    let episode = Episode(title: feedItem.title ?? "")
+                    episodes.append(episode)
+                })
+                
+                self.episodes = episodes
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                break
+            case let .failure(error):
+                print("Failed to parse feed:", error)
+                break
+            default:
+                //this could be atom, json - that one we deleted cuz we dont need them we are just parsing rss
+                print("Found a feed...")
+            }
+            
         }
     }
     

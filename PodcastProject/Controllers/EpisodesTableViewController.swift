@@ -57,6 +57,21 @@ class EpisodesTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let episode = episodes[indexPath.row]
+        print("Tryong to pay episode;", episode.title)
+        
+        //get access to applocation's window
+        let window = UIApplication.shared.keyWindow
+        
+        let playerDetailView = Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+        
+        playerDetailView.episode = episode
+        
+        playerDetailView.frame = self.view.frame
+        window?.addSubview(playerDetailView)
+    }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows

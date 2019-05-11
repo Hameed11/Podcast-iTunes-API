@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import FeedKit
 
 
 //Networking layer should be seperated of viewController
@@ -20,6 +21,31 @@ class APIService {
     
     //a class property so we can access it in any methods within ther class
     let baseiTunesSeacchURL = "https://itunes.apple.com/search"
+    
+    
+    
+    func fetchEpisodes(feedUrl: String, completionHandler: @escaping ([Episode]) -> ()) {
+        
+        let secureFeedUrl = feedUrl.contains("https") ? feedUrl : feedUrl.replacingOccurrences(of: "http", with: "https")
+        
+        guard let url = URL(string: secureFeedUrl) else { return}
+        let parser = FeedParser(URL: url)
+        
+        parser.parseAsync { (result) in
+            print("Successfuly parse feed:", result.isSuccess)
+            
+            if let err = result.error {
+                print("Failed to parse XML feed:", err)
+                return
+            }
+            
+            guard let feed = result.rssFeed else { return }
+            
+            let episodes = feed.topEpisode()
+            completionHandler(episodes)
+            
+        }
+    }
     
     //closure param ([Podcast]) is an array of type Podcast
     func fetchPodcasts(searchText: String, completionHandler: @escaping ([Podcast]) -> ()) {

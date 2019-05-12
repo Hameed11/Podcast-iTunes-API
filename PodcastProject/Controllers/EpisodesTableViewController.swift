@@ -65,6 +65,7 @@ class EpisodesTableViewController: UITableViewController {
         //get access to applocation's window
         let window = UIApplication.shared.keyWindow
         
+        //load playerDetailView from xib file
         let playerDetailView = Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
         
         playerDetailView.episode = episode

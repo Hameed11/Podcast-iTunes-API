@@ -41,11 +41,37 @@ class PlayerDetailsView: UIView {
     }()
     
     //Prepares the receiver for service after it has been loaded from an Interface Builder archive, or nib file.
+    fileprivate func observePlayerCurrentTime() {
+        //we'll use a Periodic Observer to monitor the play time of our AVPlayer object
+        let interval = CMTimeMake(value: 1, timescale: 2)
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
+            
+            self.currentTimeLabel.text = time.toDisplayString()
+            
+           let durationTime = self.player.currentItem?.duration
+            self.durationLabel.text = durationTime?.toDisplayString()
+            
+            //on storyboard set slider value to 0, mini 0, maxi 1
+            self.updateCurrentTimeSlider()
+        }
+    }
+    
+    fileprivate func updateCurrentTimeSlider() {
+        
+        //use the current time of player devided by the duration time
+        let currentTimeSeconds = CMTimeGetSeconds(player.currentTime())
+        let durationSeconds = CMTimeGetSeconds(player.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
+        
+        let percentage = currentTimeSeconds / durationSeconds
+        self.currentTimeSlider.value = Float(percentage)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        observePlayerCurrentTime()
         //Monitor the player when it starts
-        let time = CMTime(value: 1, timescale: 3)
+        let time = CMTimeMake(value: 1, timescale: 3)
         
         let times = [NSValue(time: time)]
         player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
@@ -55,6 +81,12 @@ class PlayerDetailsView: UIView {
     }
     
     // MARK:_ IB Actions & Outlets
+    
+    @IBOutlet weak var currentTimeLabel: UILabel!
+    @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var currentTimeSlider: UISlider!
+    
+    
     
     @IBAction func handleDismiss(_ sender: UIButton) {
        self.removeFromSuperview()

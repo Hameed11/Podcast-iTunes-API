@@ -80,7 +80,7 @@ class EpisodesTableViewController: UITableViewController {
         let window = UIApplication.shared.keyWindow
         
         //load playerDetailView from xib file
-        let playerDetailView = Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+        let playerDetailView = PlayerDetailsView.initFromNib()
         
         playerDetailView.episode = episode
         

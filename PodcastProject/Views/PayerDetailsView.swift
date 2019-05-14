@@ -88,6 +88,10 @@ class PlayerDetailsView: UIView {
         }
     }
     
+    static func initFromNib() -> PlayerDetailsView {
+        return Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+    }
+    
     //MARK:-  3. to test Retain Cycle override deintit method
     // called after pressing the button dismiss
     deinit {

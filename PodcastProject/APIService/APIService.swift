@@ -29,22 +29,31 @@ class APIService {
         let secureFeedUrl = feedUrl.contains("https") ? feedUrl : feedUrl.replacingOccurrences(of: "http", with: "https")
         
         guard let url = URL(string: secureFeedUrl) else { return}
-        let parser = FeedParser(URL: url)
         
-        parser.parseAsync { (result) in
-            print("Successfuly parse feed:", result.isSuccess)
+        //MARK:- to fix search delay fetch these lines in background thread so we dont block the main thread (UI), what is gonna happen is we r gonna fetch XML feed & parse it in background thread 
+        //
+        DispatchQueue.global(qos: .background).async {
+            print("before parser")
+            let parser = FeedParser(URL: url)
+            print("after parser")
             
-            if let err = result.error {
-                print("Failed to parse XML feed:", err)
-                return
+            parser.parseAsync { (result) in
+                print("Successfuly parse feed:", result.isSuccess)
+                
+                if let err = result.error {
+                    print("Failed to parse XML feed:", err)
+                    return
+                }
+                
+                guard let feed = result.rssFeed else { return }
+                
+                let episodes = feed.topEpisode()
+                completionHandler(episodes)
             }
             
-            guard let feed = result.rssFeed else { return }
-            
-            let episodes = feed.topEpisode()
-            completionHandler(episodes)
-            
         }
+        
+       
     }
     
     //closure param ([Podcast]) is an array of type Podcast

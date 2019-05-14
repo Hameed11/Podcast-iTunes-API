@@ -41,18 +41,30 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
         searchController.searchBar.delegate = self
     }
     
+     // MARK:_ 1. instead of searching for every text change we will delay search using timer
+    var timer: Timer?
+    
     //MARK:- setup Work
     //3. implement a UISearchController
     //searchText parameter is the text we are searching
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
         
-        //MARK:_ the order of call
-        print(1)
-        APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
-            self.podcasts = podcasts
-            self.tableView.reloadData()
-        }
+        timer?.invalidate()
+        // MARK:_ 2. instead of searching for every text change we will delay search using timer
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: {
+            //this block of code will get excuted after 0.5 second - fetch podcasts after 0.5 second
+            (timer) in
+            
+            //MARK:_ the order of call
+            print(1)
+            APIService.shared.fetchPodcasts(searchText: searchText) { (podcasts) in
+                self.podcasts = podcasts
+                self.tableView.reloadData()
+            }
+        })
+        
+       
         
     }
     

@@ -40,19 +40,21 @@ class PlayerDetailsView: UIView {
         return avPlayer
     }()
     
+    ///MARK:-  3. has Retain Cycle
+    // fixed by adding [weak self] and add ? all selfs - player will stop when we hit the button dismiss
     //Prepares the receiver for service after it has been loaded from an Interface Builder archive, or nib file.
     fileprivate func observePlayerCurrentTime() {
         //we'll use a Periodic Observer to monitor the play time of our AVPlayer object
         let interval = CMTimeMake(value: 1, timescale: 2)
-        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { (time) in
+        player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
             
-            self.currentTimeLabel.text = time.toDisplayString()
+            self?.currentTimeLabel.text = time.toDisplayString()
             
-           let durationTime = self.player.currentItem?.duration
-            self.durationLabel.text = durationTime?.toDisplayString()
+            let durationTime = self?.player.currentItem?.duration
+            self?.durationLabel.text = durationTime?.toDisplayString()
             
             //on storyboard set slider value to 0, mini 0, maxi 1
-            self.updateCurrentTimeSlider()
+            self?.updateCurrentTimeSlider()
         }
     }
     
@@ -70,14 +72,26 @@ class PlayerDetailsView: UIView {
         super.awakeFromNib()
         
         observePlayerCurrentTime()
+        
+       
         //Monitor the player when it starts
         let time = CMTimeMake(value: 1, timescale: 3)
-        
         let times = [NSValue(time: time)]
-        player.addBoundaryTimeObserver(forTimes: times, queue: .main) {
+        
+        //MARK:-  1. has Retain Cycle
+        // player has a reference to self
+        // self has a reference to player
+        // the fix added  [weak self] in and ? after self self?
+        player.addBoundaryTimeObserver(forTimes: times, queue: .main) { [weak self] in
             print("Episode started playing")
-            self.enlargeEpisodeImageView()
+            self?.enlargeEpisodeImageView()
         }
+    }
+    
+    //MARK:-  3. to test Retain Cycle override deintit method
+    // called after pressing the button dismiss
+    deinit {
+        print("PlayerDetailsView memory being reclaimed...")
     }
     
     // MARK:_ IB Actions & Outlets
@@ -86,11 +100,48 @@ class PlayerDetailsView: UIView {
     @IBOutlet weak var durationLabel: UILabel!
     @IBOutlet weak var currentTimeSlider: UISlider!
     
+    @IBAction func handleCurrentTimeChanged(_ sender: Any) {
+        print("Slider value:", currentTimeSlider.value)
+        
+        let percentage = currentTimeSlider.value
+        
+        guard let duration = player.currentItem?.duration else { return }
+        let durationInSeconds = CMTimeGetSeconds(duration)
+        
+        let seekTimeInSeconds = Float64(percentage) * durationInSeconds
+        let seekTime = CMTimeMakeWithSeconds(seekTimeInSeconds, preferredTimescale: 1)
+        player.seek(to: seekTime)
+    }
     
+    fileprivate func seekToCurrentTime(delta: Int64) {
+        let fifteenSeconds = CMTimeMake(value: delta, timescale: 1)
+        let seekTime = CMTimeAdd(player.currentTime(), fifteenSeconds)
+        player.seek(to: seekTime)
+    }
+    //18.L
+    @IBAction func handleRewind(_ sender: Any) {
+       seekToCurrentTime(delta: -15)
+    }
     
+    //18.L
+    @IBAction func handleFastForward(_ sender: Any) {
+        seekToCurrentTime(delta: 15)
+    }
+    
+   
     @IBAction func handleDismiss(_ sender: UIButton) {
        self.removeFromSuperview()
     }
+    
+    //18.L
+    //on UI Builder change value to 1
+    @IBAction func handleVolumeChanged(_ sender: UISlider) {
+        player.volume = sender.value
+    }
+    
+    
+    
+    
     
     //17.L
     fileprivate func enlargeEpisodeImageView() {

@@ -58,6 +58,20 @@ class EpisodesTableViewController: UITableViewController {
 
     // MARK: - Table view data source
     
+    //MARK:- 1. startAnimating activityIndecator
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let activityIndecatorView = UIActivityIndicatorView(style: .whiteLarge)
+        activityIndecatorView.color = .darkGray
+        activityIndecatorView.startAnimating()
+        return activityIndecatorView
+    }
+    
+    //MARK:- 2. Stop activityIndecator
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        //if empty show 200 else retun height 0 so we cant see it
+        return episodes.isEmpty ? 200 : 0
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = episodes[indexPath.row]
         print("Tryong to pay episode;", episode.title)

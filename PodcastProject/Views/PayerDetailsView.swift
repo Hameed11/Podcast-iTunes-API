@@ -13,6 +13,7 @@ class PlayerDetailsView: UIView {
     
     var episode: Episode! {
         didSet {
+       
             titleLabel.text = episode.title
             authorLabel.text = episode.author
             
@@ -41,7 +42,7 @@ class PlayerDetailsView: UIView {
     }()
     
     ///MARK:-  3. has Retain Cycle
-    // fixed by adding [weak self] and add ? all selfs - player will stop when we hit the button dismiss
+    // fixed by adding [weak self] and add ? to all selfs - player will stop when we hit the button dismiss
     //Prepares the receiver for service after it has been loaded from an Interface Builder archive, or nib file.
     fileprivate func observePlayerCurrentTime() {
         //we'll use a Periodic Observer to monitor the play time of our AVPlayer object
@@ -71,6 +72,9 @@ class PlayerDetailsView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        //21.L 1.
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
+        
         observePlayerCurrentTime()
         
        
@@ -90,6 +94,13 @@ class PlayerDetailsView: UIView {
     
     static func initFromNib() -> PlayerDetailsView {
         return Bundle.main.loadNibNamed("PlayerDetailsView", owner: self, options: nil)?.first as! PlayerDetailsView
+    }
+    
+    //21.L gets called when we tap on the PlayerDetailsView UI
+    @objc func handleTapMaximize() {
+    
+         let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+        mainTabBarController?.maximizePlayerDetails(episode: nil)
     }
     
     //MARK:-  3. to test Retain Cycle override deintit method
@@ -133,8 +144,11 @@ class PlayerDetailsView: UIView {
     }
     
    
+    //21.L -  minimizePlayerDetails() called from MainTabBarController class using UIApplication.shared
     @IBAction func handleDismiss(_ sender: UIButton) {
-       self.removeFromSuperview()
+       //self.removeFromSuperview()
+       let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+        mainTabBarController?.minimizePlayerDetails()
     }
     
     //18.L

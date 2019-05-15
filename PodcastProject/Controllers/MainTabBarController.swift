@@ -28,7 +28,7 @@ class MainTabBarController: UITabBarController {
         
         ////MARK:- 3. Maximizing and Minimizing Player Animations
         //1 second
-        perform(#selector(maximizePlayerDetails), with: nil, afterDelay: 1)
+        //perform(#selector(maximizePlayerDetails), with: nil, afterDelay: 1)
     }
     
     
@@ -42,18 +42,30 @@ class MainTabBarController: UITabBarController {
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             
             self.view.layoutIfNeeded()
+            
+            //21.L
+            //show tabBar - sets the animated view to its original place
+            self.tabBar.transform = .identity
         })
     }
     
-    @objc func maximizePlayerDetails() {
+     func maximizePlayerDetails(episode: Episode?) {
         
         maximizedTopAnchorConstrait.isActive = true
         maximizedTopAnchorConstrait.constant = 0
         minimizedTopAnchorConstrait.isActive = false
         
+        if episode != nil {
+            playerDetailsview.episode = episode
+        }
+        
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             
             self.view.layoutIfNeeded()
+            
+            //21.L
+            //hide tabBar
+            self.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
         })
     }
     
@@ -63,15 +75,14 @@ class MainTabBarController: UITabBarController {
     
     //MARK:- 1. Maximizing and Minimizing Player Animations
     //! cuz i know it will not be nil
+     let playerDetailsview = PlayerDetailsView.initFromNib()
+    
     var maximizedTopAnchorConstrait: NSLayoutConstraint!
     var minimizedTopAnchorConstrait: NSLayoutConstraint!
     
        //MARK:- 2. Maximizing and Minimizing Player Animations
     fileprivate func setupPlayerDetailsView() {
         print("setting up playerDetailsview")
-        
-        let playerDetailsview = PlayerDetailsView.initFromNib()
-        playerDetailsview.backgroundColor = .red
         
         //use auto layou
         //add it to Subview before auto layout anchoring otherwise it will crash

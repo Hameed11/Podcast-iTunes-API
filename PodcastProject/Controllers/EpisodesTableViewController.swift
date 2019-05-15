@@ -68,12 +68,15 @@ class EpisodesTableViewController: UITableViewController {
     
     //MARK:- 2. Stop activityIndecator
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        //if empty show 200 else retun height 0 so we cant see it
+        //if empty show 200 else retun height 0 so we cant see it(activityIndecator)
         return episodes.isEmpty ? 200 : 0
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let episode = episodes[indexPath.row]
+         let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+        mainTabBarController?.maximizePlayerDetails(episode: episode)
+        /*let episode = episodes[indexPath.row]
         print("Tryong to pay episode;", episode.title)
         
         //get access to applocation's window
@@ -85,7 +88,7 @@ class EpisodesTableViewController: UITableViewController {
         playerDetailView.episode = episode
         
         playerDetailView.frame = self.view.frame
-        window?.addSubview(playerDetailView)
+        window?.addSubview(playerDetailView)*/
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

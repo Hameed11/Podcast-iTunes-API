@@ -16,7 +16,7 @@ import FeedKit
 //this class to perform network fetches for podcasts, episodes, and later downloading entire files for offline playback
 class APIService {
     
-    //Singleton
+    //called a Singleton
     static let shared = APIService()
     
     //a class property so we can access it in any methods within ther class

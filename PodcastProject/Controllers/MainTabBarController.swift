@@ -46,6 +46,11 @@ class MainTabBarController: UITabBarController {
             //21.L
             //show tabBar - sets the animated view to its original place
             self.tabBar.transform = .identity
+            
+            //22.L
+            //set to 0 to hide it when we are minimizing
+            self.playerDetailsview.maximizedStackView.alpha = 0
+            self.playerDetailsview.miniPlayerView.alpha = 1
         })
     }
     
@@ -66,6 +71,11 @@ class MainTabBarController: UITabBarController {
             //21.L
             //hide tabBar
             self.tabBar.transform = CGAffineTransform(translationX: 0, y: 100)
+            
+            //22.L
+            self.playerDetailsview.maximizedStackView.alpha = 1
+            //set to 0 to hide it when we are maximizing
+            self.playerDetailsview.miniPlayerView.alpha = 0
         })
     }
     

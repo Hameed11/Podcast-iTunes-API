@@ -10,7 +10,7 @@ import AVKit
 
 extension CMTime {
     
-    func toDisplayString() -> String {
+   /* func toDisplayString() -> String {
         
         //convert time from float to Int
         let totalSeconds = Int(CMTimeGetSeconds(self)) // self is CMTime itself
@@ -24,10 +24,10 @@ extension CMTime {
         let timeFormatString = String(format: "%02d:%02d", minutes, seconds)
         
         return timeFormatString
-    }
+    }*/
     
     
-   /* func toDisplayString() -> String {
+    func toDisplayString() -> String {
         if CMTimeGetSeconds(self).isNaN {
             return "--:--"
         }
@@ -38,7 +38,7 @@ extension CMTime {
         let hours = totalSeconds / 60 / 60
         let timeFormatString = String(format: "%02d:%02d:%02d", hours, minutes, seconds)
         return timeFormatString
-    }*/
+    }
     
     
     

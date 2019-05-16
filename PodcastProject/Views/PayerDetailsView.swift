@@ -76,6 +76,10 @@ class PlayerDetailsView: UIView {
         //21.L 1.
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
         
+        //MARK:- Drag & drop mini Player
+        //MARK:- Drag and Drop UIPanGesture Recognizer Pt.1
+        addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        
         observePlayerCurrentTime()
         
        
@@ -91,6 +95,38 @@ class PlayerDetailsView: UIView {
             print("Episode started playing")
             self?.enlargeEpisodeImageView()
         }
+    }
+    
+    //MARK:- Drag and Drop UIPanGesture Recognizer Pt.1
+    @objc func handlePan(gesture: UIPanGestureRecognizer) {
+        print("Panning")
+        
+        if gesture.state == .began {
+            print("Began")
+        } else if gesture.state == .changed {
+             print("Changed")
+            //translationX: 0 cuz we are not moving it horizantally
+            //translation to bring it up
+            let translation = gesture.translation(in: self.superview)
+            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+            print(translation.y)
+            
+            self.miniPlayerView.alpha = 1 + translation.y / 200
+            self.maximizedStackView.alpha = -translation.y / 200
+            
+        } else if gesture.state == .ended {
+             print("ended")
+            //whenever the gesture ends will animate entire view back to down to the bottom
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                self.transform = .identity
+                self.miniPlayerView.alpha = 1
+                
+                //set it to 0 so it will be hidden
+                self.maximizedStackView.alpha = 0
+            })
+            
+        }
+        
     }
     
     static func initFromNib() -> PlayerDetailsView {

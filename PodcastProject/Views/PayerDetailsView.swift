@@ -70,15 +70,49 @@ class PlayerDetailsView: UIView {
         self.currentTimeSlider.value = Float(percentage)
     }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
+    //to access it in any method
+    var panGesture: UIPanGestureRecognizer!
+    
+    fileprivate func setupGestures() {
         //21.L 1.
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapMaximize)))
         
         //MARK:- Drag & drop mini Player
         //MARK:- Drag and Drop UIPanGesture Recognizer Pt.1
-        addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handlePan)))
+        panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        miniPlayerView.addGestureRecognizer(panGesture)
+        
+        //Player Dismissal on Drag 25.L
+        maximizedStackView.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(handleDismissalPan)))
+    }
+    
+    @objc func handleDismissalPan(gesture: UIPanGestureRecognizer) {
+        
+        if gesture.state == .changed {
+            //grab translation
+            let translation = gesture.translation(in: superview)
+            maximizedStackView.transform = CGAffineTransform(translationX: 0, y: translation.y)
+        } else if gesture.state == .ended {
+            let translation = gesture.translation(in: superview)
+
+            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+                
+                //get it back to the top
+                self.maximizedStackView.transform = .identity
+                
+                if translation.y > 200 {
+                    let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
+                    mainTabBarController?.minimizePlayerDetails()
+                }
+                
+            })
+        }
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        setupGestures()
         
         observePlayerCurrentTime()
         
@@ -101,32 +135,58 @@ class PlayerDetailsView: UIView {
     @objc func handlePan(gesture: UIPanGestureRecognizer) {
         print("Panning")
         
-        if gesture.state == .began {
-            print("Began")
-        } else if gesture.state == .changed {
-             print("Changed")
-            //translationX: 0 cuz we are not moving it horizantally
-            //translation to bring it up
-            let translation = gesture.translation(in: self.superview)
-            self.transform = CGAffineTransform(translationX: 0, y: translation.y)
-            print(translation.y)
-            
-            self.miniPlayerView.alpha = 1 + translation.y / 200
-            self.maximizedStackView.alpha = -translation.y / 200
+//        if gesture.state == .began {
+//            print("Began")
+//        }
+        
+        if gesture.state == .changed {
+            handlePanChanged(gesture: gesture)
             
         } else if gesture.state == .ended {
-             print("ended")
-            //whenever the gesture ends will animate entire view back to down to the bottom
-            UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-                self.transform = .identity
-                self.miniPlayerView.alpha = 1
-                
-                //set it to 0 so it will be hidden
-                self.maximizedStackView.alpha = 0
-            })
-            
+      
+            handlePanEnded(gesture: gesture)
         }
         
+    }
+    
+    func handlePanChanged(gesture: UIPanGestureRecognizer) {
+        print("Changed")
+        //translationX: 0 cuz we are not moving it horizantally
+        //translation to bring it up
+        let translation = gesture.translation(in: self.superview)
+        self.transform = CGAffineTransform(translationX: 0, y: translation.y)
+        print(translation.y)
+        
+        self.miniPlayerView.alpha = 1 + translation.y / 200
+        self.maximizedStackView.alpha = -translation.y / 200
+    }
+    
+    func handlePanEnded(gesture: UIPanGestureRecognizer) {
+        print("ended")
+        
+        let translation = gesture.translation(in: self.superview)
+        
+        //to drag the play quickly
+        let velocity = gesture.velocity(in: self.superview)
+        print("ended:", translation.y, velocity.y)
+        
+        //whenever the gesture ends will animate entire view back to down to the bottom
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.transform = .identity
+            
+            //maximize the player to top
+            if translation.y < -200  || velocity.y < -500 {
+                UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
+                
+            } else {
+                //minimize the player to the bottom
+                self.miniPlayerView.alpha = 1
+                //set it to 0 so it will be hidden
+                self.maximizedStackView.alpha = 0
+            }
+            
+            
+        })
     }
     
     static func initFromNib() -> PlayerDetailsView {
@@ -136,8 +196,8 @@ class PlayerDetailsView: UIView {
     //21.L gets called when we tap on the PlayerDetailsView UI
     @objc func handleTapMaximize() {
     
-         let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
-        mainTabBarController?.maximizePlayerDetails(episode: nil)
+        UIApplication.mainTabBarController()?.maximizePlayerDetails(episode: nil)
+        
     }
     
     //MARK:-  3. to test Retain Cycle override deintit method
@@ -201,6 +261,7 @@ class PlayerDetailsView: UIView {
        //self.removeFromSuperview()
        let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController
         mainTabBarController?.minimizePlayerDetails()
+        
     }
     
     //18.L

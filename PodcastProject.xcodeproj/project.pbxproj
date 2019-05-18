@@ -27,6 +27,7 @@
 		730A427F2286B25A00F7DC75 /* PlayerDetailsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 730A427E2286B25A00F7DC75 /* PlayerDetailsView.xib */; };
 		730A42812286B65700F7DC75 /* PayerDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730A42802286B65700F7DC75 /* PayerDetailsView.swift */; };
 		730A428322892EAB00F7DC75 /* CMTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730A428222892EAB00F7DC75 /* CMTime.swift */; };
+		73FCFF55228FD062005C8BE1 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73FCFF54228FD062005C8BE1 /* UIApplication.swift */; };
 		87A038A12AD049E639DD7242 /* Pods_PodcastProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD6E600577FFA2D0B00E4D29 /* Pods_PodcastProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		730A427E2286B25A00F7DC75 /* PlayerDetailsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerDetailsView.xib; sourceTree = "<group>"; };
 		730A42802286B65700F7DC75 /* PayerDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayerDetailsView.swift; sourceTree = "<group>"; };
 		730A428222892EAB00F7DC75 /* CMTime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CMTime.swift; sourceTree = "<group>"; };
+		73FCFF54228FD062005C8BE1 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		9BA221DC8BB50C2E3F8EF0B6 /* Pods-PodcastProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastProject.release.xcconfig"; path = "Target Support Files/Pods-PodcastProject/Pods-PodcastProject.release.xcconfig"; sourceTree = "<group>"; };
 		BD6E600577FFA2D0B00E4D29 /* Pods_PodcastProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PodcastProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1BE675F0CF52C1C4F4AA0F2 /* Pods-PodcastProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PodcastProject.debug.xcconfig"; path = "Target Support Files/Pods-PodcastProject/Pods-PodcastProject.debug.xcconfig"; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				730A427A2286A3EA00F7DC75 /* String.swift */,
 				730A427C2286A7EB00F7DC75 /* RSSFeed.swift */,
 				730A428222892EAB00F7DC75 /* CMTime.swift */,
+				73FCFF54228FD062005C8BE1 /* UIApplication.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -294,6 +297,7 @@
 				730A427D2286A7EB00F7DC75 /* RSSFeed.swift in Sources */,
 				730A4252227EB5C000F7DC75 /* ViewController.swift in Sources */,
 				730A427B2286A3EA00F7DC75 /* String.swift in Sources */,
+				73FCFF55228FD062005C8BE1 /* UIApplication.swift in Sources */,
 				730A42812286B65700F7DC75 /* PayerDetailsView.swift in Sources */,
 				730A428322892EAB00F7DC75 /* CMTime.swift in Sources */,
 				730A4250227EB5C000F7DC75 /* AppDelegate.swift in Sources */,

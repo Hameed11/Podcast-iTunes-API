@@ -8,7 +8,9 @@
 
 import UIKit
 import AVKit
+import MediaPlayer
 
+//MARK:- Background Audio Mode + Command Center Controls Step 1 - enable background mode for our application - go to generals - capabilities - turn background modes on - check audio, audioplay, picture in picture
 class PlayerDetailsView: UIView {
     
     var episode: Episode! {
@@ -109,8 +111,68 @@ class PlayerDetailsView: UIView {
         }
     }
     
+    fileprivate func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch let sessionErr {
+            print("Failed to activate:", sessionErr)
+        }
+    }
+    
+    fileprivate func setupRemoteControl() {
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        
+        let commandCenter = MPRemoteCommandCenter.shared()
+        //enable command center
+         commandCenter.playCommand.isEnabled = true
+        commandCenter.playCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            
+            //thise code will show player on screen to play and pause audio when we swipe down
+            print("should play podcast...")
+            self.player.play()
+            self.playPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            self.miniPlayerPauseButton.setImage(#imageLiteral(resourceName: "pause"), for: .normal)
+            
+            return .success
+        }
+        
+        //thise code will show player on screen to pause audio when we swipe down
+        commandCenter.pauseCommand.isEnabled = true
+        commandCenter.pauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            print("should pause podcast...")
+            self.player.pause()
+            self.playPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            self.miniPlayerPauseButton.setImage(#imageLiteral(resourceName: "play"), for: .normal)
+            
+            return .success
+        }
+        
+        //for headphone
+        commandCenter.togglePlayPauseCommand.isEnabled = true
+        commandCenter.togglePlayPauseCommand.addTarget { (_) -> MPRemoteCommandHandlerStatus in
+            
+            self.handlePlayPause()
+            
+//            if self.player.timeControlStatus == .playing {
+//                self.player.pause()
+//            } else {
+//                self.player.play()
+//            }
+            
+            return .success
+        }
+    }
+    
+    //awakeFromNib where we initializ our custom code
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        //MARK:- Background Audio Mode + Command Center Controls Step 3 - setup remote control
+        setupRemoteControl()
+        
+        //MARK:- Background Audio Mode + Command Center Controls Step 2 - enable audioSession
+        setupAudioSession()
         
         setupGestures()
         

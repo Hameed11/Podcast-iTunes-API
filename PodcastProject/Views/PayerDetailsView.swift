@@ -19,12 +19,42 @@ class PlayerDetailsView: UIView {
             titleLabel.text = episode.title
             authorLabel.text = episode.author
             
+            //MARK:- Now Playing Info on Lock Screen - step 1
+            setupNowPlayingInfo()
+            
             playEpisode()
             
             guard let url = URL(string: episode.imageUrl ?? "") else { return }
             episodeImageView.sd_setImage(with: url)
-            miniEpisodeImageView.sd_setImage(with: url)
+            //miniEpisodeImageView.sd_setImage(with: url)
+            
+            
+            miniEpisodeImageView.sd_setImage(with: url) { (image, _, _, _) in
+                //MARK:- Now Playing Info on Lock Screen - step 2 - lockscreen artwork setup code
+                guard let image = image else { return }
+                
+                var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+                
+                
+                // some modifications here
+                let artwork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: { (_) -> UIImage in
+                    return image
+                })
+                nowPlayingInfo?[MPMediaItemPropertyArtwork] = artwork
+                
+                MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+            }
         }
+    }
+    
+    fileprivate func setupNowPlayingInfo() {
+        //access lock screen information
+        var nowPlayingInfo = [String: Any]()
+        
+        nowPlayingInfo[MPMediaItemPropertyTitle] = episode.title
+        nowPlayingInfo[MPMediaItemPropertyArtist] = episode.author
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
     fileprivate func playEpisode() {
@@ -57,9 +87,27 @@ class PlayerDetailsView: UIView {
             let durationTime = self?.player.currentItem?.duration
             self?.durationLabel.text = durationTime?.toDisplayString()
             
+            //MARK:- Now Playing Info on Lock Screen - step 3 - duration time
+            self?.setupLockscreenCurrentTime()
+            
             //on storyboard set slider value to 0, mini 0, maxi 1
             self?.updateCurrentTimeSlider()
         }
+    }
+    
+    fileprivate func setupLockscreenCurrentTime() {
+        var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo
+        
+        // some modification here
+        guard let currentItem = player.currentItem else { return }
+        let durationInSeconds = CMTimeGetSeconds(currentItem.duration)
+        
+        let elapsedTime = CMTimeGetSeconds(player.currentTime())
+        
+        nowPlayingInfo?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsedTime
+        nowPlayingInfo?[MPMediaItemPropertyPlaybackDuration] = durationInSeconds
+        
+        MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
     }
     
     fileprivate func updateCurrentTimeSlider() {

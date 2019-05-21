@@ -55,7 +55,8 @@ class MainTabBarController: UITabBarController {
         })
     }
     
-     func maximizePlayerDetails(episode: Episode?) {
+    //the places we calling this method don't have to include the second parameter cuz it is going to default as an empty array of Episode object
+    func maximizePlayerDetails(episode: Episode?, playlistEpisodes: [Episode] = []) {
         minimizedTopAnchorConstrait.isActive = false
         maximizedTopAnchorConstrait.isActive = true
         maximizedTopAnchorConstrait.constant = 0
@@ -64,9 +65,11 @@ class MainTabBarController: UITabBarController {
         //bring it back to 0
         bottomAnchorConstrait.constant = 0
         
+        
         if episode != nil {
             playerDetailsview.episode = episode
         }
+        playerDetailsview.playlistEpisodes = playlistEpisodes
         
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
             

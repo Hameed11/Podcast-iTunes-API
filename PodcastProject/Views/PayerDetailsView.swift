@@ -209,6 +209,70 @@ class PlayerDetailsView: UIView {
         
             return .success
         }
+        // Next Track Commands
+        commandCenter.nextTrackCommand.addTarget(self, action: #selector(handleNextTrack))
+        
+        commandCenter.previousTrackCommand.addTarget(self, action: #selector(handlePrevTrack))
+        
+    }
+    
+    @objc fileprivate func handlePrevTrack() {
+        //1. check if playlistEpisode.count == 0 then return
+        //2. find out current episode index
+        //3. if episode index is 0, wrap to end of list
+        // otherwise play episode index - 1
+        
+//        if playlistEpisodes.count == 0 {
+//            return
+//        }
+//        
+//        let currentEpisodeIndex = playlistEpisodes.firstIndex { (ep) -> Bool in
+//            //self.episode.title the current episode
+//            return self.episode.title == ep.title && self.episode.author == ep.author
+//        }
+//        
+//        guard let index = currentEpisodeIndex else { return }
+//        
+//        let nextEpisode: Episode
+//        if index == playlistEpisodes.count - 1 {
+//            nextEpisode = playlistEpisodes[0]
+//        } else {
+//            nextEpisode = playlistEpisodes[index - 1]
+//        }
+//        
+//        self.episode = nextEpisode
+        
+    }
+    
+    var playlistEpisodes = [Episode]()
+    
+    @objc fileprivate func handleNextTrack() {
+        print("Play next episode...")
+        //playlistEpisodes.forEach({print($0.title)})
+        
+        //first we make sure it is not empty otherwise app will crash
+        if playlistEpisodes.count == 0 {
+            return
+        }
+        
+        //figure out the index of the episode - this going to iterate through all the episodes
+        let currentEpisodeIndex = playlistEpisodes.firstIndex { (ep) -> Bool in
+             //self.episode.title the current episode
+            return self.episode.title == ep.title && self.episode.author == ep.author
+        }
+        
+        guard let index = currentEpisodeIndex else { return }
+        
+        let nextEpisode: Episode
+        if index == playlistEpisodes.count - 1 {
+            nextEpisode = playlistEpisodes[0]
+        } else {
+            nextEpisode = playlistEpisodes[index + 1]
+        }
+        
+        self.episode = nextEpisode
+        
+        
     }
     
     fileprivate func setupElapsedTime() {
